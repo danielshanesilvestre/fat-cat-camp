@@ -1,8 +1,5 @@
-
-
-
-class Cat:
-    def __init__(self, name, weight, owner_id, id = None):
+class Owner:
+    def __init__(self, name, phone_number, id = None):
         pass
 
     @property
@@ -13,17 +10,10 @@ class Cat:
         pass
 
     @property
-    def weight(self):
+    def phone_number(self):
         pass
-    @weight.setter
-    def weight(self, weight):
-        pass
-    
-    @property
-    def owner_id(self):
-        pass
-    @owner_id.setter
-    def owner_id(self, weight):
+    @phone_number.setter
+    def phone_number(self, phone_number):
         pass
 
     @classmethod
@@ -44,7 +34,7 @@ class Cat:
         pass
     
     @classmethod
-    def create(cls, name, weight, owner_id):
+    def create(cls, name, phone_number):
         pass
 
     @classmethod
@@ -63,5 +53,5 @@ class Cat:
     def find_by_name(cls):
         pass
 
-    def get_cats_with_same_owner(self):
+    def get_owned_cats(self):
         pass
