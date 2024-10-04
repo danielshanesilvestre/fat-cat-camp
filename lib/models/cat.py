@@ -95,7 +95,9 @@ class Cat:
     
     @classmethod
     def create(cls, name, weight, owner_id):
-        pass
+        cat = cls(name, weight, owner_id)
+        cat.save()
+        return cat
 
     @classmethod
     def instance_from_db(cls):
@@ -111,7 +113,4 @@ class Cat:
     
     @classmethod
     def find_by_name(cls):
-        pass
-
-    def get_cats_with_same_owner(self):
         pass

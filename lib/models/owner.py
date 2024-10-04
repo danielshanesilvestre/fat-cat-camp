@@ -83,7 +83,9 @@ class Owner:
     
     @classmethod
     def create(cls, name, phone_number):
-        pass
+        owner = cls(name, phone_number)
+        owner.save()
+        return owner
 
     @classmethod
     def instance_from_db(cls):
@@ -99,7 +101,4 @@ class Owner:
     
     @classmethod
     def find_by_name(cls):
-        pass
-
-    def get_owned_cats(self):
         pass
