@@ -1,20 +1,30 @@
 class Owner:
     def __init__(self, name, phone_number, id = None):
+        self.id = id
+        self.name = name
+        self.phone_number = phone_number
         pass
 
     @property
     def name(self):
-        pass
+        return self._name
     @name.setter
     def name(self, name):
-        pass
-
+        if isinstance(name, str) and len(name):
+            self._name = name
+        else:
+            raise ValueError("Name must be a non-empty string")
+    
     @property
     def phone_number(self):
-        pass
+        return self._phone_number
+    # TODO: Validate phone number input as actual phone number
     @phone_number.setter
     def phone_number(self, phone_number):
-        pass
+        if isinstance(phone_number, str) and len(phone_number):
+            self._phone_number = phone_number
+        else:
+            raise ValueError("Phone number must be a non-empty string")
 
     @classmethod
     def create_table(cls):
