@@ -1,4 +1,5 @@
 from models.__init__ import CURSOR, CONN
+from models.owner import Owner
 
 class Cat:
     all = {}
@@ -32,7 +33,7 @@ class Cat:
     
     @property
     def owner_id(self):
-        pass
+        return self._owner_id
     @owner_id.setter
     def owner_id(self, owner_id):
         if type(owner_id) is int and Owner.find_by_id(owner_id):

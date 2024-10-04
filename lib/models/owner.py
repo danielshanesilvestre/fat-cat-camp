@@ -88,7 +88,7 @@ class Owner:
         return owner
 
     @classmethod
-    def instance_from_db(cls):
+    def instance_from_db(cls, row):
         owner = cls.all.get(row[0])
         if owner:
             owner.name = row[1]
@@ -106,7 +106,7 @@ class Owner:
         return [cls.instance_from_db(row) for row in rows]
 
     @classmethod
-    def find_by_id(cls):
+    def find_by_id(cls, id):
         sql = """
             SELECT *
             FROM owners
