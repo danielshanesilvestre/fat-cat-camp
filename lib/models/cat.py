@@ -100,7 +100,7 @@ class Cat:
         return cat
 
     @classmethod
-    def instance_from_db(cls):
+    def instance_from_db(cls, row):
         cat = cls.all.get(row[0])
         if cat:
             cat.name = row[1]
@@ -114,12 +114,26 @@ class Cat:
 
     @classmethod
     def get_all(cls):
-        pass
+        sql = "SELECT * FROM cats"
+        rows = CURSOR.execute(sql).fetchall()
+        return [cls.instance_from_db(row) for row in rows]
 
     @classmethod
-    def find_by_id(cls):
-        pass
+    def find_by_id(cls, id):
+        sql = """
+            SELECT *
+            FROM cats
+            WHERE id = ?
+        """
+        row = CURSOR.execute(sql, (id,)).fetchone()
+        return cls.instance_from_db(row) if row else None
     
     @classmethod
-    def find_by_name(cls):
-        pass
+    def find_by_name(cls, name):
+        sql = """
+            SELECT *
+            FROM cats
+            WHERE name = ?
+        """
+        row = CURSOR.execute(sql, (name,)).fetchone()
+        return cls.instance_from_db(row) if row else None

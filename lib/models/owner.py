@@ -101,12 +101,27 @@ class Owner:
 
     @classmethod
     def get_all(cls):
-        pass
+        sql = "SELECT * FROM owners"
+        rows = CURSOR.execute(sql).fetchall()
+        return [cls.instance_from_db(row) for row in rows]
 
     @classmethod
     def find_by_id(cls):
-        pass
+        sql = """
+            SELECT *
+            FROM owners
+            WHERE id = ?
+        """
+        row = CURSOR.execute(sql, (id,)).fetchone()
+        return cls.instance_from_db(row) if row else None
+    
     
     @classmethod
-    def find_by_name(cls):
-        pass
+    def find_by_name(cls, name):
+        sql = """
+            SELECT *
+            FROM owners
+            WHERE name = ?
+        """
+        row = CURSOR.execute(sql, (name,)).fetchone()
+        return cls.instance_from_db(row) if row else None
