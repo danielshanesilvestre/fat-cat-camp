@@ -18,11 +18,23 @@ class Owner:
 
     @classmethod
     def create_table(cls):
-        pass
+        sql = """
+            CREATE TABLE IF NOT EXISTS owners (
+                id INTEGER PRIMARY KEY,
+                name TEXT,
+                phone_number TEXT
+            );
+        """
+        CURSOR.execute(sql)
+        CONN.commit()
     
     @classmethod
     def drop_table(cls):
-        pass
+        sql = """
+            DROP TABLE IF EXISTS owners;
+        """
+        CURSOR.execute(sql)
+        CONN.commit()
 
     def save(self):
         pass

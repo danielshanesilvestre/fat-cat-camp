@@ -28,7 +28,7 @@ class Cat:
         if type(weight) is int:
             self._weight = weight
         else:
-            raise ValueError("Name must be an integer")
+            raise ValueError("Weight must be an integer")
     
     @property
     def owner_id(self):
@@ -42,11 +42,25 @@ class Cat:
 
     @classmethod
     def create_table(cls):
-        pass
+        sql = """
+            CREATE TABLE IF NOT EXISTS cats (
+                id INTEGER PRIMARY KEY,
+                name TEXT,
+                weight INTEGER,
+                owner_id INTEGER,
+                FOREIGN KEY (owner_id) REFERENCES owners(id)
+            );
+        """
+        CURSOR.execute(sql)
+        CONN.commit()
     
     @classmethod
     def drop_table(cls):
-        pass
+        sql = """
+            DROP TABLE IF EXISTS cats;
+        """
+        CURSOR.execute(sql)
+        CONN.commit()
 
     def save(self):
         pass
