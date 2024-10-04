@@ -3,8 +3,8 @@ from models.__init__ import CURSOR, CONN
 class Cat:
     all = {}
 
-    def __init__(self, name, weight, owner_id, id = None):
-        self.id = id
+    def __init__(self, name, weight, owner_id, id_ = None):
+        self.id = id_
         self.name = name
         self.weight = weight
         self.owner_id = owner_id
@@ -101,7 +101,16 @@ class Cat:
 
     @classmethod
     def instance_from_db(cls):
-        pass
+        cat = cls.all.get(row[0])
+        if cat:
+            cat.name = row[1]
+            cat.weight = row[2]
+            cat.owner_id = row[3]
+        else:
+            id_ = row[0]
+            cat = cls(row[1], row[2], row[3], id_=id_)
+            cls.all[cat_id] = cat
+        return cat
 
     @classmethod
     def get_all(cls):

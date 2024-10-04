@@ -3,8 +3,8 @@ from models.__init__ import CURSOR, CONN
 class Owner:
     all = {}
 
-    def __init__(self, name, phone_number, id = None):
-        self.id = id
+    def __init__(self, name, phone_number, id_ = None):
+        self.id = id_
         self.name = name
         self.phone_number = phone_number
         pass
@@ -89,7 +89,15 @@ class Owner:
 
     @classmethod
     def instance_from_db(cls):
-        pass
+        owner = cls.all.get(row[0])
+        if owner:
+            owner.name = row[1]
+            owner.phone_number = row[2]
+        else:
+            id_ = row[0]
+            owner = cls(row[1], row[2], id_=id_)
+            cls.all[owner_id] = owner
+        return owner
 
     @classmethod
     def get_all(cls):
