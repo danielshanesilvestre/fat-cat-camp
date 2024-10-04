@@ -1,30 +1,44 @@
-
-
+from models.__init__ import CURSOR, CONN
 
 class Cat:
+    all = {}
+
     def __init__(self, name, weight, owner_id, id = None):
+        self.id = id
+        self.name = name
+        self.weight = weight
+        self.owner_id = owner_id
         pass
 
     @property
     def name(self):
-        pass
+        return self._name
     @name.setter
     def name(self, name):
-        pass
+        if isinstance(name, str) and len(name):
+            self._name = name
+        else:
+            raise ValueError("Name must be a non-empty string")
 
     @property
     def weight(self):
-        pass
+        return self._weight
     @weight.setter
     def weight(self, weight):
-        pass
+        if type(weight) is int:
+            self._weight = weight
+        else:
+            raise ValueError("Name must be an integer")
     
     @property
     def owner_id(self):
         pass
     @owner_id.setter
-    def owner_id(self, weight):
-        pass
+    def owner_id(self, owner_id):
+        if type(owner_id) is int and Owner.find_by_id(owner_id):
+            self._owner_id = owner_id
+        else:
+            raise ValueError("owner_id must reference an owner in the database")
 
     @classmethod
     def create_table(cls):
