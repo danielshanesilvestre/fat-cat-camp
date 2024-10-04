@@ -63,13 +63,35 @@ class Cat:
         CONN.commit()
 
     def save(self):
-        pass
+        sql = """
+            INSERT INTO cats (name, weight, owner_id)
+                VALUES (?, ?, ?)
+        """
+        CURSOR.execute(sql, (self.name, self.weight, self.owner_id))
+        CONN.commit()
+
+        self.id = CURSOR.lastrowid
+        type(self).all[self.id] = self
 
     def update(self):
-        pass
+        sql = """
+            UPDATE cats
+            SET name = ?, weight = ?, owner_id = ?
+            WHERE id = ?
+        """
+        CURSOR.execute(sql, (self.name, self.weight, self.owner_id, self.id))
+        CONN.commit()
 
     def delete(self):
-        pass
+        sql = """
+            DELETE FROM cats
+            WHERE id = ?
+        """
+        CURSOR.execute(sql, (self.id,))
+        CONN.commit()
+
+        del type(self).all[self.id]
+        self.id = None
     
     @classmethod
     def create(cls, name, weight, owner_id):

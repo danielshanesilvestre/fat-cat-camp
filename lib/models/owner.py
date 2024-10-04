@@ -1,4 +1,8 @@
+from models.__init__ import CURSOR, CONN
+
 class Owner:
+    all = {}
+
     def __init__(self, name, phone_number, id = None):
         self.id = id
         self.name = name
@@ -47,13 +51,35 @@ class Owner:
         CONN.commit()
 
     def save(self):
-        pass
+        sql = """
+            INSERT INTO owners (name, phone_number)
+                VALUES (?, ?)
+        """
+        CURSOR.execute(sql, (self.name, self.phone_number))
+        CONN.commit()
+
+        self.id = CURSOR.lastrowid
+        type(self).all[self.id] = self
 
     def update(self):
-        pass
+        sql = """
+            UPDATE owners
+            SET name = ?, phone_number = ?
+            WHERE id = ?
+        """
+        CURSOR.execute(sql, (self.name, self.phone_number, self.id))
+        CONN.commit()
 
     def delete(self):
-        pass
+        sql = """
+            DELETE FROM owners
+            WHERE id = ?
+        """
+        CURSOR.execute(sql, (self.id,))
+        CONN.commit()
+
+        del type(self).all[self.id]
+        self.id = None
     
     @classmethod
     def create(cls, name, phone_number):
