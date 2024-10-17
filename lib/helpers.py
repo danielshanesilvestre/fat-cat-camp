@@ -19,7 +19,8 @@ def owners_menu():
         print("  b - Go back to previous menu")
         print("  c - Register an owner")
         if len(owners) > 0:
-            print("  (number) - View owner details")
+            print("  (number) - View an owner's details")
+            print("  u - Update an owner")
             print("  d - Delete an owner")
         
         choice = input("> ")
@@ -30,12 +31,14 @@ def owners_menu():
         except ValueError:
             pass
 
-        if type(choice) == int and 1 <= choice <= len(owners):
-            view_owner(owners[choice - 1])
-        elif choice == "b":
+        if choice == "b":
             exit = True
         elif choice == "c":
             create_owner()
+        elif type(choice) == int and 1 <= choice <= len(owners):
+            view_owner(owners[choice - 1])
+        elif choice == "u" and len(owners) > 0:
+            update_owner()
         elif choice == "d" and len(owners) > 0:
             delete_owner()
         else:
@@ -71,6 +74,7 @@ def view_owner(owner):
 
         print("Please select an option:")
         print("  b - Go back to previous menu")
+        print(f"  u - Update {owner.name}")
         if len(cats) != 0:
             print("  (number) - View cat details")
         if len(cats) == 0:
@@ -84,10 +88,12 @@ def view_owner(owner):
         except ValueError:
             pass
 
-        if type(choice) == int and 0 <= choice - 1 < len(cats):
-            view_cat(cats[choice - 1])
-        elif choice == "b":
+        if choice == "b":
             exit = True
+        elif choice == "u":
+            update_owner(owner)    
+        elif type(choice) == int and 0 <= choice - 1 < len(cats):
+            view_cat(cats[choice - 1])
         elif choice == "d" and len(cats) == 0:
             delete_owner(owner)
             exit = True
@@ -96,6 +102,48 @@ def view_owner(owner):
         
         if owner.id == None:
             exit = True
+
+def update_owner(owner = None):
+
+    while owner == None:
+        print("Select an owner to update, or enter c to cancel:")
+        print("--------------------")
+        owners = Owner.get_all()
+        for i, owner in enumerate(owners, start = 1):
+            print(f"  {i}. {owner.name}")
+        print("--------------------")
+
+        choice = input("> ")
+        print("")
+
+        try:
+            choice = int(choice)
+        except ValueError:
+            pass
+
+        if choice == "c":
+            print("Cancelling operation.")
+            return
+        elif type(choice) == int and 1 <= choice <= len(owners):
+            owner = owners[choice - 1]
+        else:
+            print("Invalid choice")
+    
+    print("Enter a new name, or press return to keep the old name:")
+    choice = input("> ")
+
+    if choice != "":
+        owner.name = choice
+    
+    print("Enter a new phone number, or press return to keep the old number:")
+    choice = input("> ")
+
+    if choice != "":
+        owner.phone_number = choice
+    
+    owner.update()
+    print(f"{owner.name} has been successfully updated.")
+    pass
 
 def delete_owner(owner = None):
     while owner == None:
@@ -137,18 +185,28 @@ def cats_menu():
     exit = False
 
     while not exit:
-        print("Viewing cats:")
-        print("--------------------")
-        cats = Cat.get_all()
-        for i, cat in enumerate(cats, start = 1):
-            print(f"{i}. {cat.name}")
-        print("--------------------")
         
+        print("Viewing cats:")
+        
+        cats = Cat.get_all()
+        if len(cats) == 0:
+            print("No cats registered.")
+        else:
+            print("--------------------")
+            for i, cat in enumerate(cats, start = 1):
+                print(f"{i}. {cat.name}")
+            print("--------------------")
+        owners_len = len(Owner.get_all())
+        if owners_len == 0:
+            print("You must register an owner before registering a cat.")
+
+
         print("Please select an option:")
         print("  b - Go back to previous menu")
-        print("  (number) - View cat details")
-        print("  c - Register a cat")
+        if owners_len > 0:
+            print("  c - Register a cat")
         if len(cats) > 0:
+            print("  (number) - View cat details")
             print("  d - Delete a cat")
 
         choice = input("> ")
@@ -159,10 +217,10 @@ def cats_menu():
         except ValueError:
             pass
 
-        if type(choice) == int and 0 <= choice - 1 < len(cats):
-            view_cat(cats[choice - 1])
-        elif choice == "b":
+        if choice == "b":
             exit = True
+        elif type(choice) == int and 0 <= choice - 1 < len(cats):
+            view_cat(cats[choice - 1])
         elif choice == "d" and len(cats) > 0:
             delete_cat()
         else:
@@ -183,6 +241,7 @@ def view_cat(cat):
         print("Please select an option:")
         print("  b - Go back to previous menu")
         print("  o - View owner details")
+        print(f"  d - Delete {cat.name}")
 
         choice = input("> ")
         print("")
@@ -191,6 +250,8 @@ def view_cat(cat):
             exit = True
         elif choice == "o":
             view_owner(owner)
+        elif choice == "d":
+            delete_cat(cat)
         else:
             print("Invalid choice")
         
