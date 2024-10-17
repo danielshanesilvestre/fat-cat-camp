@@ -7,16 +7,20 @@ def owners_menu():
 
     while not exit:
         print("Viewing owners:")
-        print("--------------------")
         owners = Owner.get_all()
-        for i, owner in enumerate(owners, start = 1):
-            print(f"{i}. {owner.name}")
-        print("--------------------")
+        if len(owners) == 0:
+            print("No owners registered.")
+        else:
+            print("--------------------")
+            for i, owner in enumerate(owners, start = 1):
+                print(f"{i}. {owner.name}")
+            print("--------------------")
         print("Please select an option:")
         print("  b - Go back to previous menu")
-        print("  (number) - View owner details")
         print("  c - Register an owner")
-        print("  d - Delete an owner")
+        if len(owners) > 0:
+            print("  (number) - View owner details")
+            print("  d - Delete an owner")
         
         choice = input("> ")
         print("")
@@ -26,16 +30,26 @@ def owners_menu():
         except ValueError:
             pass
 
-        if type(choice) == int:
+        if type(choice) == int and 1 <= choice <= len(owners):
             view_owner(owners[choice - 1])
         elif choice == "b":
             exit = True
         elif choice == "c":
             create_owner()
-        elif choice == "d":
+        elif choice == "d" and len(owners) > 0:
             delete_owner()
         else:
             print("Invalid choice")
+
+def create_owner():
+    print("Enter the new owner's name:")
+    name = input("> ")
+    print("Enter the new owner's phone number:")
+    phone_number = input("> ")
+    owner = Owner.create(name, phone_number)
+    print(f"{owner.name} has been successfully registered.")
+    view_owner(owner)
+    pass
 
 def view_owner(owner):
     exit = False
@@ -79,42 +93,9 @@ def view_owner(owner):
             exit = True
         else:
             print("Invalid choice")
-
-def view_cat(cat):
-    exit = False
-
-    while not exit:
-        print(f"Viewing details of {cat.name}")
-        print("--------------------")
-        print(f"Name: {cat.name}")
-        print(f"Weight: {cat.weight} lbs")
-        owner = Owner.find_by_id(cat.owner_id)
-        print(f"Owner: {owner.name}")
-        print("--------------------")
-
-        print("Please select an option:")
-        print("  b - Go back to previous menu")
-        print("  o - View owner details")
-
-        choice = input("> ")
-        print("")
-
-        if choice == "b":
+        
+        if owner.id == None:
             exit = True
-        elif choice == "o":
-            view_owner(owner)
-        else:
-            print("Invalid choice")
-
-def create_owner():
-    print("Enter the new owner's name:")
-    name = input("> ")
-    print("Enter the new owner's phone number:")
-    phone_number = input("> ")
-    owner = Owner.create(name, phone_number)
-    print(f"{owner.name} has been successfully registered.")
-    view_owner(owner)
-    pass
 
 def delete_owner(owner = None):
     while owner == None:
@@ -167,7 +148,8 @@ def cats_menu():
         print("  b - Go back to previous menu")
         print("  (number) - View cat details")
         print("  c - Register a cat")
-        print("  d - Delete a cat")
+        if len(cats) > 0:
+            print("  d - Delete a cat")
 
         choice = input("> ")
         print("")
@@ -181,11 +163,39 @@ def cats_menu():
             view_cat(cats[choice - 1])
         elif choice == "b":
             exit = True
-        elif choice == "d":
+        elif choice == "d" and len(cats) > 0:
             delete_cat()
         else:
             print("Invalid choice")
 
+def view_cat(cat):
+    exit = False
+
+    while not exit:
+        print(f"Viewing details of {cat.name}")
+        print("--------------------")
+        print(f"Name: {cat.name}")
+        print(f"Weight: {cat.weight} lbs")
+        owner = Owner.find_by_id(cat.owner_id)
+        print(f"Owner: {owner.name}")
+        print("--------------------")
+
+        print("Please select an option:")
+        print("  b - Go back to previous menu")
+        print("  o - View owner details")
+
+        choice = input("> ")
+        print("")
+
+        if choice == "b":
+            exit = True
+        elif choice == "o":
+            view_owner(owner)
+        else:
+            print("Invalid choice")
+        
+        if cat.id == None:
+            exit = True
 
 def delete_cat(cat = None):
     while cat == None:
