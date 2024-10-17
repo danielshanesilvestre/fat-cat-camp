@@ -110,7 +110,7 @@ class Cat:
         else:
             id_ = row[0]
             cat = cls(row[1], row[2], row[3], id_=id_)
-            cls.all[cat_id] = cat
+            cls.all[id_] = cat
         return cat
 
     @classmethod

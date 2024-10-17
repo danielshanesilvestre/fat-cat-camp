@@ -96,7 +96,7 @@ class Owner:
         else:
             id_ = row[0]
             owner = cls(row[1], row[2], id_=id_)
-            cls.all[owner_id] = owner
+            cls.all[id_] = owner
         return owner
 
     @classmethod
