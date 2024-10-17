@@ -7,15 +7,29 @@ def owners_menu():
 
     while not exit:
         print("Viewing owners:")
-        for owner in Owner.get_all():
-            print(f"- {owner.name}, {owner.phone_number}")
+        print("--------------------")
+        owners = Owner.get_all()
+        for i, owner in enumerate(owners, start = 1):
+            print(f"{i}. {owner.name}")
             pass
+        print("--------------------")
         print("Please select an option:")
-        print("b - Go back to previous menu")
-        print("c - Register an owner")
-        print("d - Delete an owner")
+        print("  b - Go back to previous menu")
+        print("  (number) - View owner details")
+        print("  c - Register an owner")
+        print("  d - Delete an owner")
+        
         choice = input("> ")
-        if choice == "b":
+        print("")
+
+        try:
+            choice = int(choice)
+        except ValueError:
+            pass
+
+        if type(choice) == int:
+            view_owner(owners[choice - 1])
+        elif choice == "b":
             exit = True
         elif choice == "c":
             create_owner()
@@ -23,6 +37,64 @@ def owners_menu():
             delete_owner()
         else:
             print("Invalid choice")
+
+def view_owner(owner):
+    exit = False
+
+    while not exit:
+        print(f"Viewing details of {owner.name}:")
+        print("--------------------")
+        print(f"Name: {owner.name}")
+        print(f"Phone number: {owner.phone_number}")
+        print("Cats:")
+        cats = [cat for cat in Cat.get_all() if cat.owner_id == owner.id]
+        for i, cat in enumerate(cats, start = 1):
+            print(f"  {i}. {cat.name}")
+        print("--------------------")
+
+        print("Please select an option:")
+        print("  b - Go back to previous menu")
+        print("  (number) - View cat details")
+
+        choice = input("> ")
+        print("")
+
+        try:
+            choice = int(choice)
+        except ValueError:
+            pass
+
+        if type(choice) == int:
+            if 0 <= choice - 1 < len(cats):
+                view_cat(cats[choice - 1])
+            else:
+                print("Invalid choice")
+        elif choice == "b":
+            exit = True
+
+def view_cat(cat):
+    exit = False
+
+    while not exit:
+        print(f"Viewing details of {cat.name}")
+        print("--------------------")
+        print(f"Name: {cat.name}")
+        print(f"Weight: {cat.weight} lbs")
+        owner = Owner.find_by_id(cat.owner_id)
+        print(f"Owner: {owner.name}")
+        print("--------------------")
+
+        print("Please select an option:")
+        print("  b - Go back to previous menu")
+        print("  o - View owner details")
+
+        choice = input("> ")
+        print("")
+
+        if choice == "b":
+            exit = True
+        elif choice == "o":
+            view_owner(owner)
 
 def create_owner():
 
