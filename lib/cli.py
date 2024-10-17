@@ -8,8 +8,13 @@ from helpers import (
 
 
 def main():
+    print("Welcome to the Fat Cat Camp manager utility program!")
     while True:
-        menu()
+        
+        print("Please select an option:")
+        print("  e - Exit the program")
+        print("  o - View owners")
+        print("  c - View cats")
 
         choice = input("> ")
         print("")
@@ -22,15 +27,6 @@ def main():
             cats_menu()
         else:
             print("Invalid choice")
-
-
-def menu():
-    print("Welcome to the Fat Cat Camp manager utility program!")
-    print("Please select an option:")
-    print("  e - Exit the program")
-    print("  o - View owners")
-    print("  c - View cats")
-
 
 if __name__ == "__main__":
     main()

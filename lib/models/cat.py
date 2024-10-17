@@ -26,7 +26,7 @@ class Cat:
         return self._weight
     @weight.setter
     def weight(self, weight):
-        if type(weight) is int:
+        if type(weight) is float:
             self._weight = weight
         else:
             raise ValueError("Weight must be an integer")
@@ -47,7 +47,7 @@ class Cat:
             CREATE TABLE IF NOT EXISTS cats (
                 id INTEGER PRIMARY KEY,
                 name TEXT,
-                weight INTEGER,
+                weight REAL,
                 owner_id INTEGER,
                 FOREIGN KEY (owner_id) REFERENCES owners(id)
             );
