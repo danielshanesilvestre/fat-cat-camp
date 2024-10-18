@@ -103,31 +103,38 @@ def view_owner(owner):
         if owner.id == None:
             exit = True
 
-def update_owner(owner = None):
+def select_owner(default = None):
+    print("--------------------")
+    owners = Owner.get_all()
+    for i, owner in enumerate(owners, start = 1):
+        print(f"  {i}. {owner.name}")
+    print("--------------------")
 
+    choice = input("> ")
+    print("")
+
+    if default != None and choice == "":
+        return default
+
+    try:
+        choice = int(choice)
+    except ValueError:
+        pass
+
+    if choice == "c":
+        print("Cancelling operation.")
+        return False
+    elif type(choice) == int and 1 <= choice <= len(owners):
+        return owners[choice - 1]
+    else:
+        print("Invalid choice")
+
+def update_owner(owner = None):
     while owner == None:
         print("Select an owner to update, or enter c to cancel:")
-        print("--------------------")
-        owners = Owner.get_all()
-        for i, owner in enumerate(owners, start = 1):
-            print(f"  {i}. {owner.name}")
-        print("--------------------")
-
-        choice = input("> ")
-        print("")
-
-        try:
-            choice = int(choice)
-        except ValueError:
-            pass
-
-        if choice == "c":
-            print("Cancelling operation.")
+        owner = select_owner()
+        if owner == False:
             return
-        elif type(choice) == int and 1 <= choice <= len(owners):
-            owner = owners[choice - 1]
-        else:
-            print("Invalid choice")
     
     print("Enter a new name, or press return to keep the old name:")
     choice = input("> ")
@@ -148,27 +155,9 @@ def update_owner(owner = None):
 def delete_owner(owner = None):
     while owner == None:
         print("Select an owner to delete, or enter c to cancel:")
-        print("--------------------")
-        owners = Owner.get_all()
-        for i, owner in enumerate(owners, start = 1):
-            print(f"  {i}. {owner.name}")
-        print("--------------------")
-
-        choice = input("> ")
-        print("")
-
-        try:
-            choice = int(choice)
-        except ValueError:
-            pass
-
-        if choice == "c":
-            print("Cancelling operation.")
+        owner = select_owner()
+        if owner == False:
             return
-        elif type(choice) == int and 1 <= choice <= len(owners):
-            owner = owners[choice - 1]
-        else:
-            print("Invalid choice")
     
     cats = [cat for cat in Cat.get_all() if cat.owner_id == owner.id]
 
@@ -207,6 +196,7 @@ def cats_menu():
             print("  c - Register a cat")
         if len(cats) > 0:
             print("  (number) - View cat details")
+            print("  u - Update a cat")
             print("  d - Delete a cat")
 
         choice = input("> ")
@@ -219,12 +209,43 @@ def cats_menu():
 
         if choice == "b":
             exit = True
+        elif choice == "c" and owners_len > 0:
+            create_cat()
         elif type(choice) == int and 0 <= choice - 1 < len(cats):
             view_cat(cats[choice - 1])
+        elif choice == "u" and len(cats) > 0:
+            update_cat()
         elif choice == "d" and len(cats) > 0:
             delete_cat()
         else:
             print("Invalid choice")
+
+def create_cat(owner = None):
+
+    while owner == None:
+        print("Select an owner to register the cat under, or enter c to cancel:")
+        owner = select_owner()
+
+
+    print("Enter the new cat's name:")
+    name = input("> ")
+    print("")
+    
+    weight = None
+    while not type(weight) == float:
+        print("Enter the new cat's current weight:")
+        choice = input("> ")
+        print("")
+        try:
+            weight = float(choice)
+        except ValueError:
+            print("Weight must be a number.")
+            pass
+
+    cat = Cat.create(name, weight, owner.id)
+    print(f"{cat.name} has been successfully registered.")
+    view_cat(cat)
+    pass
 
 def view_cat(cat):
     exit = False
@@ -240,7 +261,8 @@ def view_cat(cat):
 
         print("Please select an option:")
         print("  b - Go back to previous menu")
-        print("  o - View owner details")
+        print(f"  o - View {owner.name}'s details")
+        print(f"  u - Update {cat.name}")
         print(f"  d - Delete {cat.name}")
 
         choice = input("> ")
@@ -250,6 +272,8 @@ def view_cat(cat):
             exit = True
         elif choice == "o":
             view_owner(owner)
+        elif choice == "u":
+            update_cat(cat)
         elif choice == "d":
             delete_cat(cat)
         else:
@@ -258,30 +282,78 @@ def view_cat(cat):
         if cat.id == None:
             exit = True
 
+def select_cat():
+    print("--------------------")
+    cats = Cat.get_all()
+    for i, cat in enumerate(cats, start = 1):
+        print(f"  {i}. {cat.name}")
+    print("--------------------")
+
+    choice = input("> ")
+    print("")
+
+    try:
+        choice = int(choice)
+    except ValueError:
+        pass
+
+    if choice == "c":
+        print("Cancelling operation.")
+        return False
+    elif type(choice) == int and 1 <= choice <= len(cats):
+        return cats[choice - 1]
+    else:
+        print("Invalid choice")
+
+def update_cat(cat = None):
+    while cat == None:
+        print("Select a cat to update, or enter c to cancel:")
+        cat = select_cat()
+        if cat == False:
+            return
+    
+    owner = Owner.find_by_id(cat.owner_id)
+    
+    choice = None
+    while type(choice) != Owner:
+        print("Select a new owner, or press return to keep the old owner:")
+        choice = select_owner(owner)
+        if choice == False:
+            return
+    cat.owner_id = choice.id
+    
+    print("Enter a new name, or press return to keep the old name:")
+    choice = input("> ")
+
+    if choice != "":
+        owner.name = choice
+    
+    print("Enter a new weight, or press return to keep the old weight:")
+    choice = None
+    while not type(choice) == float:
+        choice = input("> ")
+
+        if choice == "":
+            choice = cat.weight
+            break
+
+        try:
+            choice = float(choice)
+        except ValueError:
+            print("Weight must be a number.")
+            pass
+    cat.weight = choice
+    
+    cat.update()
+    print(f"{cat.name} has been successfully updated.")
+        
+
 def delete_cat(cat = None):
     while cat == None:
         print("Select a cat to delete, or enter c to cancel:")
-        print("--------------------")
-        cats = Cat.get_all()
-        for i, cat in enumerate(cats, start = 1):
-            print(f"  {i}. {cat.name}")
-        print("--------------------")
-
-        choice = input("> ")
-        print("")
-
-        try:
-            choice = int(choice)
-        except ValueError:
-            pass
-
-        if choice == "c":
-            print("Cancelling operation.")
+        cat = select_cat()
+        if cat == False:
             return
-        elif type(choice) == int and 1 <= choice <= len(cats):
-            cat = cats[choice - 1]
-        else:
-            print("Invalid choice")
     
     name = cat.name
     cat.delete()
