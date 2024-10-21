@@ -22,6 +22,7 @@ def owners_menu():
             print("  (number) - View an owner's details")
             print("  u - Update an owner")
             print("  d - Delete an owner")
+            print("  f - Search for an owner by phone number")
         
         choice = input("> ")
         print("")
@@ -41,6 +42,8 @@ def owners_menu():
             update_owner()
         elif choice == "d" and len(owners) > 0:
             delete_owner()
+        elif choice == "f" and len(owners) > 0:
+            find_owner_by_phone_number()
         else:
             print("Invalid choice")
 
@@ -170,6 +173,49 @@ def delete_owner(owner = None):
     print(f"{name} has been successfully deleted.")
     pass
 
+def find_owner_by_phone_number():
+    print("Enter a phone number to search by, or press c to cancel:")
+    choice = input("> ")
+
+    if choice == "c":
+        return
+
+    owners = [owner for owner in Owner.get_all() if owner.phone_number == choice]
+    if len(owners) > 0:
+        owner = owners[0]
+        print(f"Found match: {owner.name}")
+        view_owner(owner)
+    else:
+        print("No match found.")
+
+    pass
+
+def find_cat_by_weight():
+    weight = None
+    while not type(weight) == float:
+        print("Enter a weight to search by, or press c to cancel:")
+        choice = input("> ")
+        print("")
+        
+        if choice == "c":
+            return
+
+        try:
+            weight = float(choice)
+        except ValueError:
+            print("Weight must be a number.")
+            pass
+
+    cats = [cat for cat in Cat.get_all() if cat.weight == weight]
+    if len(cats) > 0:
+        cat = cats[0]
+        print(f"Found match: {cat.name}")
+        view_cat(cat)
+    else:
+        print("No match found.")
+
+    pass
+
 def cats_menu():
     exit = False
 
@@ -198,6 +244,7 @@ def cats_menu():
             print("  (number) - View cat details")
             print("  u - Update a cat")
             print("  d - Delete a cat")
+            print("  f - Search for a cat by weight")
 
         choice = input("> ")
         print("")
@@ -217,6 +264,8 @@ def cats_menu():
             update_cat()
         elif choice == "d" and len(cats) > 0:
             delete_cat()
+        elif choice == "f" and len(cats) > 0:
+            find_cat_by_weight()
         else:
             print("Invalid choice")
 
@@ -326,7 +375,7 @@ def update_cat(cat = None):
     choice = input("> ")
 
     if choice != "":
-        owner.name = choice
+        cat.name = choice
     
     print("Enter a new weight, or press return to keep the old weight:")
     choice = None
