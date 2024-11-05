@@ -76,7 +76,7 @@ def view_owner(owner):
         print(f"Name: {owner.name}")
         print(f"Phone number: {owner.phone_number}")
         
-        cats = [cat for cat in Cat.get_all() if cat.owner_id == owner.id]
+        cats = Cat.find_all_by_owner_id(owner.id)
         if len(cats) == 0:
             print("Cats: None")
         else:
@@ -175,7 +175,7 @@ def delete_owner(owner = None):
         if owner == False:
             return
     
-    cats = [cat for cat in Cat.get_all() if cat.owner_id == owner.id]
+    cats = Cat.find_all_by_owner_id(owner.id)
 
     if len(cats) > 0:
         print("Owner must have no cats to be deleted.")
@@ -192,8 +192,6 @@ def find_owner_by_phone_number():
 
     if choice == "c":
         return
-
-    # owners = [owner for owner in Owner.get_all() if owner.phone_number == choice]
     
     owner = Owner.find_by_phone_number(choice)
     
@@ -220,7 +218,7 @@ def find_cat_by_weight():
             print("Weight must be a number.")
             pass
 
-    cat = Cat.find_by_weight(weight)# [cat for cat in Cat.get_all() if cat.weight == weight]
+    cat = Cat.find_by_weight(weight)
     if cat == None:
         print("No match found.")
     else:

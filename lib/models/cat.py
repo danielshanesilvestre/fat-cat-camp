@@ -148,3 +148,13 @@ class Cat:
         """
         row = CURSOR.execute(sql, (weight,)).fetchone()
         return cls.instance_from_db(row) if row else None
+        
+    @classmethod
+    def find_all_by_owner_id(cls, owner_id):
+        sql = """
+            SELECT *
+            FROM cats
+            WHERE owner_id = ?
+        """
+        rows = CURSOR.execute(sql, (owner_id,)).fetchall()
+        return [cls.instance_from_db(row) for row in rows]#  if row else None
