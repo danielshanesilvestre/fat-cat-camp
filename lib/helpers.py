@@ -48,8 +48,12 @@ def owners_menu():
             print("Invalid choice")
 
 def create_owner():
-    print("Enter the new owner's name:")
-    name = input("> ")
+    name = None
+    while not (type(name) == str and name != ""):
+        print("Enter the new owner's name:")
+        name = input("> ")
+        if name == "":
+            print("Name must not be empty.")
     print("Enter the new owner's phone number:")
     phone_number = input("> ")
     owner = Owner.create(name, phone_number)
