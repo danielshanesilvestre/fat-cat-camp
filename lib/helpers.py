@@ -49,6 +49,16 @@ def owners_menu():
 
 def create_owner():
     print("Enter the new owner's name:")
+
+    choice = None
+    while type(choice) != Owner:
+        print("Enter the new owner's name:")
+        choice = select_owner(owner)
+        if choice == False:
+            return
+    cat.owner_id = choice.id
+
+
     name = input("> ")
     print("Enter the new owner's phone number:")
     phone_number = input("> ")
@@ -209,13 +219,12 @@ def find_cat_by_weight():
             print("Weight must be a number.")
             pass
 
-    cats = [cat for cat in Cat.get_all() if cat.weight == weight]
-    if len(cats) > 0:
-        cat = cats[0]
+    cat = Cat.find_by_weight(weight)# [cat for cat in Cat.get_all() if cat.weight == weight]
+    if cat == None:
+        print("No match found.")
+    else:
         print(f"Found match: {cat.name}")
         view_cat(cat)
-    else:
-        print("No match found.")
 
     pass
 
