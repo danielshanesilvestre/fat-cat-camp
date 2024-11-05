@@ -78,6 +78,7 @@ def view_owner(owner):
         print("Please select an option:")
         print("  b - Go back to previous menu")
         print(f"  u - Update {owner.name}")
+        print(f"  c - Register a cat under {owner.name}")
         if len(cats) != 0:
             print("  (number) - View cat details")
         if len(cats) == 0:
@@ -100,6 +101,8 @@ def view_owner(owner):
         elif choice == "d" and len(cats) == 0:
             delete_owner(owner)
             exit = True
+        elif choice == "c":
+            create_cat(owner = owner)
         else:
             print("Invalid choice")
         
