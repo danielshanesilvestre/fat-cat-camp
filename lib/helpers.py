@@ -279,9 +279,13 @@ def create_cat(owner = None):
         owner = select_owner()
 
 
-    print("Enter the new cat's name:")
-    name = input("> ")
-    print("")
+    name = None
+    while not (type(name) == str and name != ""):
+        print("Enter the new cat's name:")
+        name = input("> ")
+        print("")
+        if name == "":
+            print("Name must not be empty.")
     
     weight = None
     while not type(weight) == float:
