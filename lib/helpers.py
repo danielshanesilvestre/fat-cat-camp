@@ -193,14 +193,15 @@ def find_owner_by_phone_number():
     if choice == "c":
         return
 
-    owners = [owner for owner in Owner.get_all() if owner.phone_number == choice]
-    if len(owners) > 0:
-        owner = owners[0]
+    # owners = [owner for owner in Owner.get_all() if owner.phone_number == choice]
+    
+    owner = Owner.find_by_phone_number(choice)
+    
+    if owner == None:
+        print("No match found.")
+    else:
         print(f"Found match: {owner.name}")
         view_owner(owner)
-    else:
-        print("No match found.")
-
     pass
 
 def find_cat_by_weight():
