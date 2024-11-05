@@ -49,16 +49,6 @@ def owners_menu():
 
 def create_owner():
     print("Enter the new owner's name:")
-
-    choice = None
-    while type(choice) != Owner:
-        print("Enter the new owner's name:")
-        choice = select_owner(owner)
-        if choice == False:
-            return
-    cat.owner_id = choice.id
-
-
     name = input("> ")
     print("Enter the new owner's phone number:")
     phone_number = input("> ")
